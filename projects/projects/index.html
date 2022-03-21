@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com https://cdn.jsdelivr.net/; prefetch-src 'self'; connect-src 'self' https://www.google-analytics.com;">
+
+    
+
+    <meta name="author" content="Jiayang Yin">
+    <meta name="description" content="Jiayang Yin
+This is an R Markdown Notebook. When you execute code within the notebook, the results appear beneath the code.
+Try executing this chunk by clicking the Run button within the chunk or by placing your cursor inside it and pressing Cmd&#43;Shift&#43;Enter.
+set.seed(1) noise &lt;- rnorm(100) randwalk &lt;- cumsum(noise) plot(randwalk, type=&#34;l&#34;) Trying to fit to a particular random walk.    Let&rsquo;s suppose we thought the above random walk was actually given by linear trend plus noise.">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Time Series ARIMA Project"/>
+<meta name="twitter:description" content="Jiayang Yin
+This is an R Markdown Notebook. When you execute code within the notebook, the results appear beneath the code.
+Try executing this chunk by clicking the Run button within the chunk or by placing your cursor inside it and pressing Cmd&#43;Shift&#43;Enter.
+set.seed(1) noise &lt;- rnorm(100) randwalk &lt;- cumsum(noise) plot(randwalk, type=&#34;l&#34;) Trying to fit to a particular random walk.    Let&rsquo;s suppose we thought the above random walk was actually given by linear trend plus noise."/>
+
+    <meta property="og:title" content="Time Series ARIMA Project" />
+<meta property="og:description" content="Jiayang Yin
+This is an R Markdown Notebook. When you execute code within the notebook, the results appear beneath the code.
+Try executing this chunk by clicking the Run button within the chunk or by placing your cursor inside it and pressing Cmd&#43;Shift&#43;Enter.
+set.seed(1) noise &lt;- rnorm(100) randwalk &lt;- cumsum(noise) plot(randwalk, type=&#34;l&#34;) Trying to fit to a particular random walk.    Let&rsquo;s suppose we thought the above random walk was actually given by linear trend plus noise." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jyglen.github.io/projects/projects/" /><meta property="article:section" content="projects" />
+<meta property="article:published_time" content="2021-05-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-05-07T00:00:00+00:00" />
+
+
+
+    <title>
+  Time Series ARIMA Project · Jiayang Yin
+</title>
+
+    
+      <link rel="canonical" href="https://jyglen.github.io/projects/projects/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css" integrity="sha256-2f3b/&#43;byfmmYXcX&#43;BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.002ee2378e14c7a68f1f0a53d9694ed252090987c4e768023fac694a4fc5f793.css" integrity="sha256-AC7iN44Ux6aPHwpT2WlO0lIJCYfE52gCP6xpSk/F95M=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <meta name="generator" content="Hugo 0.95.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="preload-transitions colorscheme-auto">
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Jiayang Yin
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/music/">Music</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/contact/">Contact me</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://jyglen.github.io/projects/projects/">
+          Time Series ARIMA Project
+        </a>
+      </h1>
+    </header>
+
+    <p>Jiayang Yin</p>
+<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook. When you execute code within the notebook, the results appear beneath the code.</p>
+<p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Cmd+Shift+Enter</em>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>noise &lt;- rnorm(100)
+</span></span><span style="display:flex;"><span>randwalk &lt;- cumsum(noise)
+</span></span><span style="display:flex;"><span>plot(randwalk, type=&#34;l&#34;)
+</span></span></code></pre></div><h3 id="trying-to-fit-to-a-particular-random-walk">
+  Trying to fit to a particular random walk.
+  <a class="heading-link" href="#trying-to-fit-to-a-particular-random-walk">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Let&rsquo;s suppose we thought the above random walk was actually given by linear trend plus noise.  Let&rsquo;s use R&rsquo;s linear regression <code>lm</code> function to fit a linear trend.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Assign a vector 1,2,3,..,100 to &#34;timeTerm&#34;.
+</span></span><span style="display:flex;"><span>timeTerm &lt;- 1:100
+</span></span><span style="display:flex;"><span># Then use R&#39;s &#34;lm&#34; function to regress &#34;randwalk&#34; vs &#34;timeTerm&#34;
+</span></span><span style="display:flex;"><span># and assign the result to &#34;fit&#34;.
+</span></span><span style="display:flex;"><span>fit &lt;- lm(randwalk~timeTerm)
+</span></span><span style="display:flex;"><span># Finally use &#34;summmary&#34; to display the results.
+</span></span><span style="display:flex;"><span>summary(fit)
+</span></span></code></pre></div><p>Now let&rsquo;s plot the regression line versus our random walk series.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use &#34;plot&#34; and &#34;abline&#34; functions to display both
+</span></span><span style="display:flex;"><span># the &#34;randwalk&#34; series plot as well as the regression line.
+</span></span><span style="display:flex;"><span>plot(randwalk, type=&#34;l&#34;)
+</span></span><span style="display:flex;"><span>abline(fit, col=&#34;red&#34;)
+</span></span></code></pre></div><p>Now let&rsquo;s plot the residuals of this regression.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use the &#34;resid&#34; function to extract the residuals of
+</span></span><span style="display:flex;"><span># the regression and plot them (type=&#34;h&#34;).
+</span></span><span style="display:flex;"><span>res &lt;- resid(fit)
+</span></span><span style="display:flex;"><span>plot(res, type=&#34;h&#34;)
+</span></span></code></pre></div><p>Let&rsquo;s do an ACF plot of the residuals.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do an ACF plot of the residuals.
+</span></span><span style="display:flex;"><span>acf(res)
+</span></span></code></pre></div><p>Let&rsquo;s do a PACF plot of the residuals.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do a PACF plot of the residuals.
+</span></span><span style="display:flex;"><span>pacf(res)
+</span></span></code></pre></div><p>It looks like the residuals are well modeled by an AR(1) process. To fit a linear trend plus AR(1) model, we can use R&rsquo;s <code>Arima</code> (not <code>arima</code>) function.</p>
+<p>First load the <code>forecast</code> library.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Load the &#34;forecast&#34; library.
+</span></span><span style="display:flex;"><span>library(&#34;forecast&#34;)
+</span></span></code></pre></div><p>Now fit the <code>Arima</code> function for AR(1) with drift.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use the &#34;ARIMA&#34; function to fit an AR(1) process with drift,
+</span></span><span style="display:flex;"><span># and assign the results to &#34;TrendAR1&#34;.
+</span></span><span style="display:flex;"><span># Then display the results.
+</span></span><span style="display:flex;"><span>TrendAR1 &lt;- Arima(res, order = c(1,0,0))
+</span></span><span style="display:flex;"><span>TrendAR1
+</span></span></code></pre></div><p>Now let&rsquo;s plot the residuals of the ARIMA fit.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use the &#34;residuals&#34; function to extract the residuals from
+</span></span><span style="display:flex;"><span># the ARIMA fit and plot them.
+</span></span><span style="display:flex;"><span>plot(residuals(TrendAR1))
+</span></span></code></pre></div><p>Let&rsquo;s do an ACF plot of those residuals.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do an ACF plot of the residuals.
+</span></span><span style="display:flex;"><span>acf(residuals(TrendAR1))
+</span></span></code></pre></div><p>It looks like the residuals are pretty random.</p>
+<p>Just for kicks, let&rsquo;s model our random walk as an ARIMA(0,1,0) process (which is what it is!) and compare the first to the above linear trend plus AR(1) model.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use the &#34;arima&#34; function to fit and display an ARIMA(0,1,0) process.
+</span></span><span style="display:flex;"><span>Arima(res, order = c(0,1,0))
+</span></span></code></pre></div><p>So in this case the linear trend plus AR(1) has a better fit than the true model ARIMA(0,1,0).  Note that both models would give roughly similar one-step ahead forecasts but completely different long-term forecasts.</p>
+<p>What is the lesson here?  Sometimes the &ldquo;wrong&rdquo; model has the better fit.  In this case, we know what the &ldquo;right&rdquo; model is (random walk = ARIMA(0,1,0)), but in real life we don&rsquo;t get to see the &ldquo;right&rdquo; model or even know if there is a &ldquo;right&rdquo; one.</p>
+<p>If we see something like AR(1) where the coefficient is near a unit root (in this case 0.80), then we should do a Dickey-Fuller test.
+First load the <code>tseries</code> library.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Load the &#34;tseries&#34; library.
+</span></span><span style="display:flex;"><span>library(&#34;tseries&#34;)
+</span></span></code></pre></div><p>Now run the Dickey-Fuller test (i.e. the ADF test with zero additional lags).</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Use the &#34;adf.test&#34; function with zero lag order.
+</span></span><span style="display:flex;"><span>adf.test(res, k=0)
+</span></span></code></pre></div><p>The p-value is telling us that there is a 9.396% chance that a random walk would have produced the DF test statistic of -3.1869 or lower.  This is not terribly conclusive, so we should probably keep both models in mind (AR(1) + trend, and random walk).</p>
+<h3 id="lets-do-some-simulations-to-look-at-the-distribution-of-our-coefficient-estimators-for-ar1-processes-with-and-without-unit-roots">
+  Let&rsquo;s do some simulations to look at the distribution of our coefficient estimators for AR(1) processes with and without unit roots.
+  <a class="heading-link" href="#lets-do-some-simulations-to-look-at-the-distribution-of-our-coefficient-estimators-for-ar1-processes-with-and-without-unit-roots">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Let&rsquo;s simulate an AR(1) process with coefficient 0.80 of length 20.  We&rsquo;ll do 10,000 repetitions and use a least squares fit. We then display summary statistics of the fitted coefficient.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>x &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(1,0,0),ar=c(0.80)),n=20)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x)
+</span></span></code></pre></div><p>Notice that the mean and median fits are less than the coefficient 0.80.  Let&rsquo;s also display a histogram of the results.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>hist(x, breaks=100)
+</span></span></code></pre></div><p>We observe that the distribution seems skewed to the left.  Let&rsquo;s repeat this with series of length 100.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Repeat above with series length 100.
+</span></span><span style="display:flex;"><span>x.100 &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(1,0,0),ar=c(0.80)),n=100)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x.100[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x.100)
+</span></span></code></pre></div><p>There still is some bias, but the mean and median values of the fitted coefficients are approaching the true values of 0.80.  Let&rsquo;s examine the histogram.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x.100, breaks=100)
+</span></span></code></pre></div><p>Finally, let&rsquo;s take a look at series of length 500.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Repeat above with series length 500.
+</span></span><span style="display:flex;"><span>x.500 &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(1,0,0),ar=c(0.80)),n=500)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x.500[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x.500)
+</span></span></code></pre></div><p>And the histrogram:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x.500, breaks=100)
+</span></span></code></pre></div><p>This histogram is starting to look more like a normal distribution.</p>
+<p>Now let&rsquo;s repeat all of the above, but for an ARIMA(0,1,0) process, i.e. a random walk.  First let&rsquo;s do random walks of length 20.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the simulation for ARIMA(0,1,0) processes of length 20.
+</span></span><span style="display:flex;"><span>x.rw20 &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(0,1,0)),n=20)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x.rw20[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x.rw20)
+</span></span></code></pre></div><p>This is biased quite a bit below the true coefficient of 1.00.  Lets look at the histogram.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x.rw20, breaks=100)
+</span></span></code></pre></div><p>This looks pretty skewed to the left.  Now let&rsquo;s repeat with random walks of length 100.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Repeat above with series length 100.
+</span></span><span style="display:flex;"><span>x.rw100 &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(0,1,0)),n=100)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x.rw100[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x.rw100)
+</span></span></code></pre></div><p>This is closer to the true value of 1.00.  Let&rsquo;s look at the histrogram.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x.rw100, breaks=100)
+</span></span></code></pre></div><p>This still looks pretty skewed.  Let&rsquo;s try random walks of length 500.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Repeat above with series length 500.
+</span></span><span style="display:flex;"><span>x.rw500 &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(0,1,0)),n=500)
+</span></span><span style="display:flex;"><span>fit &lt;- lm(formula = ts[-1] ~ ts[-length(ts)])
+</span></span><span style="display:flex;"><span>x.rw500[i] &lt;- fit$coefficients[2]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x.rw500)
+</span></span></code></pre></div><p>Now we are quite close to the true value of 1.00.  Let&rsquo;s examine the histrogram.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x.rw500, breaks=100)
+</span></span></code></pre></div><p>Notice that we are <em>not</em> converging to a normal distribution, but rather one that is skewed.</p>
+<h3 id="what-about-maximum-likelihood">
+  What about maximum likelihood?
+  <a class="heading-link" href="#what-about-maximum-likelihood">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Let&rsquo;s repeat our simulation for the AR(1) series of length 20 with  the <code>arima</code> function&rsquo;s maximum likelihood (<code>ML</code>) method.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the simulation for AR(1) processes of length 20, but
+</span></span><span style="display:flex;"><span># instead of fitting with linear regression, use the &#34;arima&#34;
+</span></span><span style="display:flex;"><span># function&#39;s &#34;ML&#34; method to fit.
+</span></span><span style="display:flex;"><span>x &lt;- c()
+</span></span><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span>for (i in 1:10000) {
+</span></span><span style="display:flex;"><span>ts &lt;- arima.sim(model=list(order=c(1,0,0),ar=c(0.80)),n=20)
+</span></span><span style="display:flex;"><span>fit &lt;- arima(ts, order=c(1,0,0), method=&#34;ML&#34;)
+</span></span><span style="display:flex;"><span>x[i] &lt;- fit$coef[1]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>summary(x)
+</span></span></code></pre></div><p>We see that the bias is a little smaller but not greatly so.  WE can also see the histogram.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Do the histogram (with 100 breaks).
+</span></span><span style="display:flex;"><span>hist(x, breaks=100)
+</span></span></code></pre></div><h3 id="spurious-regressions">
+  Spurious regressions
+  <a class="heading-link" href="#spurious-regressions">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Create two independent random walks with drift +0.2 and of length 200 and plot them on the same chart.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>set.seed(1)
+</span></span><span style="display:flex;"><span># Now create two independent random walks of length 200
+</span></span><span style="display:flex;"><span># with drift +0.20, called &#34;randwalk1&#34; and &#34;randwalk2&#34;.
+</span></span><span style="display:flex;"><span>randwalk1 &lt;- arima.sim(model=list(order=c(0,1,0)), n=200, mean=0.2)
+</span></span><span style="display:flex;"><span>randwalk2 &lt;- arima.sim(model=list(order=c(0,1,0)), n=200, mean=0.2)
+</span></span><span style="display:flex;"><span># Plot both random walks on same chart using
+</span></span><span style="display:flex;"><span># the &#34;plot&#34; (type=&#34;l&#34;) and &#34;lines&#34; function (col=&#34;red&#34;).
+</span></span><span style="display:flex;"><span>plot(randwalk1, type=&#34;l&#34;)
+</span></span><span style="display:flex;"><span>lines(randwalk2, col=&#34;red&#34;)
+</span></span></code></pre></div><p>Let&rsquo;s do a scatterplot of these two series.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Plot randwalk1 in x-axis vs randwalk2 in the y-axis.
+</span></span><span style="display:flex;"><span>par(pty=&#34;s&#34;)
+</span></span><span style="display:flex;"><span>plot(randwalk1, randwalk2)
+</span></span></code></pre></div><p>Now let&rsquo;s regress the second random walk with drift versus the first.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Regress &#34;randwalk2&#34; versus &#34;randwalk1&#34; and display results.
+</span></span><span style="display:flex;"><span>regression &lt;- lm(randwalk2~randwalk1)
+</span></span><span style="display:flex;"><span>summary(regression)
+</span></span></code></pre></div><p>This is a <em>spurious regression</em>!  The 0.86 R-squared is meaningless!</p>
+
+  </article>
+</section>
+
+  
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    ©
+    
+    2022
+     Jiayang Yin 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js" integrity="sha256-j7hjdqFuaEr0cqMprvUC2&#43;vPq2XOJk6XUNFEkSlHxgI="></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
